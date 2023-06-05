@@ -1,6 +1,7 @@
 package ru.praktikun.selenium;
 
 import org.junit.Test;
+import org.openqa.selenium.By;
 import ru.praktikum.selenium.pajeobject.MainPage;
 
 public class OrderTest extends BaseTest {
@@ -17,8 +18,9 @@ public class OrderTest extends BaseTest {
     @Test
     public void scooterRentalOrder() {
         mainPage = new MainPage(webDriver);
-        new MainPage(webDriver)
-                .clickOrderButtonHeader()
+        By orderButtonHeader = mainPage.getOrderButtonHeader();
+        By orderButtonFooter = mainPage.getOrderButtonFooter();
+        mainPage.clickOrderButton(orderButtonHeader)
                 .writeInputFieldName(name)
                 .writeInputFieldLastName(lastName)
                 .writeInputFieldAddress(address)
@@ -35,6 +37,25 @@ public class OrderTest extends BaseTest {
                 .clickYesButtonCheckout()
                 .modalWindowOrderSuccess()
                 .clickButtonViewStatus()
-                .chekContainerSuccess();
+                .checkContainerSuccess();
+
+        mainPage.clickOrderButton(orderButtonFooter)
+                .writeInputFieldName(name)
+                .writeInputFieldLastName(lastName)
+                .writeInputFieldAddress(address)
+                .expandListMetroStation()
+                .chooseMetroStation(station)
+                .setInputFieldPhoneNumber(phoneNumber)
+                .clickButtonNextFillOutTheForm()
+                .setInputFieldRentalStartDate(dateRental)
+                .openDropdownListRentalPeriod()
+                .chooseRentalPeriod(periodRental)
+                .chooseScooterColorGrey()
+                .setInputFieldComment(comment)
+                .clickButtonOrderFinal()
+                .clickYesButtonCheckout()
+                .modalWindowOrderSuccess()
+                .clickButtonViewStatus()
+                .cheсkContainerSuccess();
     }
 }
