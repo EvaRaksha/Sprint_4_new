@@ -12,7 +12,6 @@ public class MainPage {
         webDriver.get(APP_URL);
     }
 
-    private By orderButtonHeader = By.className("Button_Button__ra12g");
     private By inputFieldName = By.xpath(".//input[@placeholder='* Имя']");
     private By inputFieldLastName  = By.xpath(".//input[@placeholder='* Фамилия']");
     private By inputFieldAddress  = By.xpath(".//input[@placeholder='* Адрес: куда привезти заказ']");
@@ -29,12 +28,22 @@ public class MainPage {
 
     private By yesButtonCheckout = By.xpath(".//button[@class='Button_Button__ra12g Button_Middle__1CSJM' and text()='* Да']");
 
-    private By modalWindowOrderSuccess  = By.xpath("//div[@class=Order_ModalHeader__3FDaJ') and text()='Заказ оформлен']");
+    private By modalWindowOrderSuccess  = By.xpath("//div[@class='Order_ModalHeader__3FDaJ') and text()='Заказ оформлен']");
 
     private By buttonViewStatus = By.xpath(".//button[@class='Button_Button__ra12g Button_Middle__1CSJM' and text()='Посмотреть статус']");
 
-    public MainPage clickOrderButtonHeader(){
-        webDriver.findElement(orderButtonHeader).click();
+    public By getOrderButtonHeader() {
+        return By.className("Button_Button__ra12g");
+    }
+
+    public By getOrderButtonFooter() {
+        return By.className("Button_Button__ra12g Button_UltraBig__UU3Lp");
+    }
+
+    public MainPage clickOrderButton(By buttonSelector) {
+        if (buttonSelector != null) {
+            webDriver.findElement(buttonSelector).click();
+        }
         return this;
     }
 

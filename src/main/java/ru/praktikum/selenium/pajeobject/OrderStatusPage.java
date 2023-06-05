@@ -13,7 +13,12 @@ public class OrderStatusPage {
 
     private By containerSuccess = By.xpath(".//div[@class='<div class=Track_Content__St6Kn']");
 
-    public void chekContainerSuccess() {
+    public void checkContainerSuccess() {
+        boolean isDisplayed = webDriver.findElement(containerSuccess).isDisplayed();
+        assertTrue(isDisplayed);
+    }
+
+    public void cheсkContainerSuccess() {
         boolean isDisplayed = webDriver.findElement(containerSuccess).isDisplayed();
         assertTrue(isDisplayed);
     }
