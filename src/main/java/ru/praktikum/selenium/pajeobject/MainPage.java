@@ -32,14 +32,14 @@ public class MainPage {
     private By inputFieldComment = By.cssSelector("input.Input_Input__1iN_Z.Input_Responsible__1jDKN[placeholder='Комментарий для курьера']");
     private By buttonOrderFinal = By.xpath(".//button[@class='Button_Button__ra12g Button_Middle__1CSJM']");
 
-    private By yesButtonCheckout = By.cssSelector("button.Button_Button__ra12g.Button_Middle__1CSJM[text='Да']");
+    private By yesButtonCheckout = By.xpath("//button[text()='Да']");
 
     private By modalWindowOrderSuccess = By.xpath("//div[@class='Order_ModalHeader__3FDaJ' and text()='Заказ оформлен']");
 
     private By buttonViewStatus = By.xpath(".//button[@class='Button_Button__ra12g Button_Middle__1CSJM' and text()='Посмотреть статус']");
     public int questionIndex;
-    private By questionLocator = By.xpath("//div[@id='accordion__heading-" + questionIndex + "']");
-    private By answerLocator = By.xpath("//div[@id='accordion__panel-" + questionIndex + "']");
+    private By questionLocator;
+    private By answerLocator;
 
 
     public void clickOrderButton(By orderButtonLocator) {
@@ -156,12 +156,4 @@ public class MainPage {
         WebElement faqBlock = webDriver.findElement(By.className("Home_FAQ__3uVm4"));
         js.executeScript("arguments[0].scrollIntoView();", faqBlock);
     }
-    public By getQuestionLocator() {
-        return questionLocator;
-    }
-
-    public By getAnswerLocator() {
-        return answerLocator;
-    }
-
 }
