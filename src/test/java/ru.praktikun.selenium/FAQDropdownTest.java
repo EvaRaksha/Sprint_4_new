@@ -1,49 +1,56 @@
 package ru.praktikun.selenium;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import ru.praktikum.selenium.config.AppConfig;
+import ru.praktikum.selenium.pajeobject.MainPage;
 
 import java.util.Arrays;
 import java.util.Collection;
 
 @RunWith(Parameterized.class)
 public class FAQDropdownTest extends BaseTest {
-    private int questionIndex;
+    private MainPage mainPage;
 
-    public FAQDropdownTest(int questionIndex) {
+    private int questionIndex;
+    private String expectedQuestionText;
+    private String expectedAnswerText;
+
+    public FAQDropdownTest(int questionIndex, String expectedQuestionText, String expectedAnswerText) {
         this.questionIndex = questionIndex;
+        this.expectedQuestionText = expectedQuestionText;
+        this.expectedAnswerText = expectedAnswerText;
     }
-    
-    @Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
-                {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}
-        });
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> testData() {
+        return Arrays.asList(
+                new Object[][] {
+                        {0, "Сколько это стоит? И как оплатить?", "Сутки — 400 рублей. Оплата курьеру — наличными или картой."},
+                        {1, "Хочу сразу несколько самокатов! Так можно?", "Пока что у нас так: один заказ — один самокат. Если хотите покататься с друзьями, можете просто сделать несколько заказов — один за другим."},
+                        {2, "Как рассчитывается время аренды?", "Допустим, вы оформляете заказ на 8 мая. Мы привозим самокат 8 мая в течение дня. Отсчёт времени аренды начинается с момента, когда вы оплатите заказ курьеру. Если мы привезли самокат 8 мая в 20:30, суточная аренда закончится 9 мая в 20:30."},
+                        {3, "Можно ли заказать самокат прямо на сегодня?", "Только начиная с завтрашнего дня. Но скоро станем расторопнее."},
+                        {4, "Можно ли продлить заказ или вернуть самокат раньше?", "Пока что нет! Но если что-то срочное — всегда можно позвонить в поддержку по красивому номеру 1010."},
+                        {5, "Вы привозите зарядку вместе с самокатом?", "Самокат приезжает к вам с полной зарядкой. Этого хватает на восемь суток — даже если будете кататься без передышек и во сне. Зарядка не понадобится."},
+                        {6, "Можно ли отменить заказ?", "Да, пока самокат не привезли. Штрафа не будет, объяснительной записки тоже не попросим. Все же свои."},
+                        {7, "Я жизу за МКАДом, привезёте?", "Да, обязательно. Всем самокатов! И Москве, и Московской области."},
+                }
+        );
     }
 
     @Test
-    public void testFAQDropdown() {
-        try {
-            webDriver.get(AppConfig.APP_URL);
+    public void testAccordionQuestion() {
+        mainPage = new MainPage(webDriver, questionIndex);
 
-            String questionLocator = "//*[@id='accordion__heading-" + questionIndex + "']";
-            String answerLocator = "//*[@id='accordion__panel-" + questionIndex + "']";
+        mainPage.scrollToFaqBlock();
+        mainPage.clickQuestionAndExpandAnswer();
 
-            WebElement question = webDriver.findElement(By.xpath(questionLocator));
-            WebElement answer = webDriver.findElement(By.xpath(answerLocator));
+        String actualQuestionText = mainPage.findQuestionText();
+        String actualAnswerText = mainPage.findAnswerText();
 
-            question.click();
-            Thread.sleep(1000);
-
-            assert answer.isDisplayed() : "Ответ не открыт для вопроса: " + question.getText();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Assert.assertEquals("Текст вопроса не совпадает", expectedQuestionText, actualQuestionText);
+        Assert.assertEquals("Текст ответа не совпадает", expectedAnswerText, actualAnswerText);
     }
 }

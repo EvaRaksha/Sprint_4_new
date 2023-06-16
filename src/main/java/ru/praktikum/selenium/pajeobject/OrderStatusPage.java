@@ -17,9 +17,4 @@ public class OrderStatusPage {
         boolean isDisplayed = webDriver.findElement(containerSuccess).isDisplayed();
         assertTrue(isDisplayed);
     }
-
-    public void cheсkContainerSuccess() {
-        boolean isDisplayed = webDriver.findElement(containerSuccess).isDisplayed();
-        assertTrue(isDisplayed);
-    }
 }

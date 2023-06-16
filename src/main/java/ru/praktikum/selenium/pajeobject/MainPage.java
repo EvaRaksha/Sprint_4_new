@@ -1,17 +1,23 @@
 package ru.praktikum.selenium.pajeobject;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
 import static ru.praktikum.selenium.config.AppConfig.APP_URL;
 
 public class MainPage {
     WebDriver webDriver;
 
-    public MainPage(WebDriver webDriver) {
+    public MainPage(WebDriver webDriver, int questionIndex) {
         this.webDriver = webDriver;
+        this.questionIndex = questionIndex;
+        questionLocator = By.xpath("//div[@id='accordion__heading-" + questionIndex + "']");
+        answerLocator = By.xpath("//div[@id='accordion__panel-" + questionIndex + "']");
+
         webDriver.get(APP_URL);
     }
-
     private By inputFieldName = By.xpath(".//input[@placeholder='* Имя']");
     private By inputFieldLastName  = By.xpath(".//input[@placeholder='* Фамилия']");
     private By inputFieldAddress  = By.xpath(".//input[@placeholder='* Адрес: куда привезти заказ']");
@@ -26,25 +32,28 @@ public class MainPage {
     private By inputFieldComment = By.cssSelector("input.Input_Input__1iN_Z.Input_Responsible__1jDKN[placeholder='Комментарий для курьера']");
     private By buttonOrderFinal = By.xpath(".//button[@class='Button_Button__ra12g Button_Middle__1CSJM']");
 
-    private By yesButtonCheckout = By.xpath(".//button[@class='Button_Button__ra12g Button_Middle__1CSJM' and text()='* Да']");
+    private By yesButtonCheckout = By.cssSelector("button.Button_Button__ra12g.Button_Middle__1CSJM[text='Да']");
 
-    private By modalWindowOrderSuccess  = By.xpath("//div[@class='Order_ModalHeader__3FDaJ') and text()='Заказ оформлен']");
+    private By modalWindowOrderSuccess = By.xpath("//div[@class='Order_ModalHeader__3FDaJ' and text()='Заказ оформлен']");
 
     private By buttonViewStatus = By.xpath(".//button[@class='Button_Button__ra12g Button_Middle__1CSJM' and text()='Посмотреть статус']");
+    public int questionIndex;
+    private By questionLocator = By.xpath("//div[@id='accordion__heading-" + questionIndex + "']");
+    private By answerLocator = By.xpath("//div[@id='accordion__panel-" + questionIndex + "']");
 
-    public By getOrderButtonHeader() {
-        return By.className("Button_Button__ra12g");
+
+    public void clickOrderButton(By orderButtonLocator) {
+        webDriver.findElement(orderButtonLocator).click();
     }
 
-    public By getOrderButtonFooter() {
-        return By.className("Button_Button__ra12g Button_UltraBig__UU3Lp");
-    }
+    public By getOrderButtonLocator(String orderButtonVariable) {
 
-    public MainPage clickOrderButton(By buttonSelector) {
-        if (buttonSelector != null) {
-            webDriver.findElement(buttonSelector).click();
+        if (orderButtonVariable.equals("orderButtonHeader")) {
+            return By.cssSelector(".Button_Button__ra12g");
+        } else if (orderButtonVariable.equals("orderButtonFooter")) {
+            return By.cssSelector(".Button_Button__ra12g.Button_UltraBig__UU3Lp");
         }
-        return this;
+        return null;
     }
 
     public MainPage writeInputFieldName(String name){
@@ -126,4 +135,33 @@ public class MainPage {
         webDriver.findElement(buttonViewStatus).click();
         return new OrderStatusPage(webDriver);
     }
+
+    public String findQuestionText() {
+        WebElement questionElement = questionLocator.findElement(webDriver);
+        return questionElement.getText();
+    }
+
+    public void clickQuestionAndExpandAnswer() {
+        WebElement questionElement = webDriver.findElement(questionLocator);
+        questionElement.click();
+    }
+
+    public String findAnswerText() {
+        WebElement answerElement = answerLocator.findElement(webDriver);
+        return answerElement.getText();
+    }
+
+    public void scrollToFaqBlock() {
+        JavascriptExecutor js = (JavascriptExecutor) webDriver;
+        WebElement faqBlock = webDriver.findElement(By.className("Home_FAQ__3uVm4"));
+        js.executeScript("arguments[0].scrollIntoView();", faqBlock);
+    }
+    public By getQuestionLocator() {
+        return questionLocator;
+    }
+
+    public By getAnswerLocator() {
+        return answerLocator;
+    }
+
 }

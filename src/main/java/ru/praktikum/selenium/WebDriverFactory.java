@@ -10,6 +10,10 @@ public class WebDriverFactory {
         WebDriver webDriver;
         String browserName = System.getProperty("browserName");
 
+        if (browserName == null) {
+            browserName = "firefox";
+        }
+
         switch (browserName){
             case "chrome":
                 WebDriverManager.chromedriver().setup();
